@@ -81,25 +81,61 @@ udp.sendto(inicio_do_jogo.encode(),jogadores[1])
 sua_vez='False'
 udp.sendto(sua_vez.encode(),jogadores[0])
 udp.sendto(sua_vez.encode(),jogadores[1])
+
+numero_de_jogadas=0
 while True:
     # JOGADOR 1
+    #Enviando permissão para o jogador realizar sua jogada
     sua_vez='True'
     udp.sendto(sua_vez.encode(),jogadores[0])
-    msg, jogador = udp.recvfrom(1024)  # quantidade de bytes que espera receber
+    #Enviando sua jogada para ele e seu oponente
+    if numero_de_jogadas==0:
+        primeira_jogada='primeira jogada'
+        udp.sendto(primeira_jogada.encode(),jogadores[0])
+    else:
+        return_jogo=exibir()
+        udp.sendto(return_jogo.encode(),jogadores[0])
+    
+
+    #Recebendo jogada do 1º jogador
+    msg, jogador = udp.recvfrom(1024)  
     while jogador!=jogadores[0]:
         msg, jogador = udp.recvfrom(1024)
     msg=msg.decode()
     jogada(jogo_da_velha,int(msg[0]),int(msg[1]),'x')
-    print('Recebi de ',jogador, msg) # decode = de bytes para string
-    return_cliente=exibir()
-    udp.sendto(return_cliente.encode(),jogador)
+    print('Recebi de ',jogador, msg) 
+    return_jogada=exibir()
     
+    
+
+    #Enviando jogada realizada
+    udp.sendto(return_jogada.encode(),jogadores[0])
+    
+
+    
+    
+
+    numero_de_jogadas+=1
+
     # JOGADOR 2
+    #Enviando permissão para o jogador realizar sua jogada
+    sua_vez='True'
     udp.sendto(sua_vez.encode(),jogadores[1])
-    msg, jogador = udp.recvfrom(1024)  # quantidade de bytes que espera receber
+    #Enviando sua jogada para ele e seu oponente
+    
+    return_jogo=exibir()
+    udp.sendto(return_jogo.encode(),jogadores[1])
+    
+    #Recebendo jogada do 2º jogador
+    msg, jogador = udp.recvfrom(1024)  
     msg=msg.decode()
     jogada(jogo_da_velha,int(msg[0]),int(msg[1]),'o')
-    print('Recebi de ',jogador, msg) # decode = de bytes para string
-    return_cliente=exibir()
-    udp.sendto(return_cliente.encode(),jogador)
+    print('Recebi de ',jogador, msg) 
+    
+    #Enviando jogada realizada
+    return_jogada=exibir()
+    
+    udp.sendto(return_jogada.encode(),jogadores[1])
+    
+    
 udp.close()
