@@ -47,7 +47,7 @@ while True:
         print('O jogo terminou em EMPATE!')
         break
 
-    #Aramazenando minha jogada
+    #Gerando minha jogada
     msg=''
     print('Sua vez!')
     linha=input('Digite o numero da linha: ')
@@ -64,8 +64,28 @@ while True:
         coluna=input('Coluna Invalida! Digite outra coluna: ')
     msg+=coluna
     
-    #Enviado jogada
+    #Enviado minha jogada
     udp.sendto(msg.encode(), dest)
+
+    #Validando minha jogada
+    validando_jogada,servidor=udp.recvfrom(1024)
+    while validando_jogada.decode()=='False':
+        msg=''
+        print('Jogada invalida, tente novamente!!')
+        linha=input('Digite o numero da linha: ')
+        if linha=='\x18':
+            break
+        while linha<'0' or linha>'2':
+            linha=input('Linha Invalida! Digite outra linha: ')
+        msg+=linha
+        coluna=input('Digite o numero da coluna: ')
+        if coluna=='\x18':
+            break
+        while coluna<'0' or coluna>'2':
+            coluna=input('Coluna Invalida! Digite outra coluna: ')
+        msg+=coluna
+        udp.sendto(msg.encode(), dest)
+        validando_jogada,servidor=udp.recvfrom(1024)
 
     #Vizualizando a minha jogada
     print('Você jogou:')

@@ -90,7 +90,7 @@ while True:
     sua_vez='True'
     udp.sendto(sua_vez.encode(),jogadores[0])
     
-    #Exibindo jogadas realizada
+    #Exibindo jogada realizada
     if numero_de_jogadas==0:
         primeira_jogada='primeira jogada'
         udp.sendto(primeira_jogada.encode(),jogadores[0])
@@ -119,11 +119,27 @@ while True:
     while jogador!=jogadores[0]:
         msg, jogador = udp.recvfrom(1024)
     msg=msg.decode()
-    jogada(jogo_da_velha,int(msg[0]),int(msg[1]),'x')
+    #jogada(jogo_da_velha,int(msg[0]),int(msg[1]),'x')
     print('Recebi de ',jogador, msg) 
-    return_jogada=exibir()
     
+    #Validando jogada    
+    while True:
+        validando_jogada=jogada(jogo_da_velha,int(msg[0]),int(msg[1]),'x')
+        if validando_jogada==True:
+            msg='True'
+            udp.sendto(msg.encode(),jogadores[0])
+            break
+        msg='False'
+        udp.sendto(msg.encode(),jogadores[0])
+        msg,jogador=udp.recvfrom(1024)
+        while jogador!=jogadores[0]:
+            msg, jogador = udp.recvfrom(1024)
+        msg=msg.decode()
+        print('Recebi de ',jogador, msg) 
+        
+
     #Enviando jogada realizada
+    return_jogada=exibir()
     udp.sendto(return_jogada.encode(),jogadores[0])
 
     #Enviando condição de vitoria
@@ -172,8 +188,24 @@ while True:
     #Recebendo jogada do 2º jogador
     msg, jogador = udp.recvfrom(1024)  
     msg=msg.decode()
-    jogada(jogo_da_velha,int(msg[0]),int(msg[1]),'o')
+    #jogada(jogo_da_velha,int(msg[0]),int(msg[1]),'o')
     print('Recebi de ',jogador, msg) 
+
+    #Validando jogada    
+    while True:
+        validando_jogada=jogada(jogo_da_velha,int(msg[0]),int(msg[1]),'o')
+        if validando_jogada==True:
+            msg='True'
+            udp.sendto(msg.encode(),jogadores[1])
+            break
+        msg='False'
+        udp.sendto(msg.encode(),jogadores[1])
+        msg,jogador=udp.recvfrom(1024)
+        while jogador!=jogadores[1]:
+            msg, jogador = udp.recvfrom(1024)
+        msg=msg.decode()
+        print('Recebi de ',jogador, msg) 
+       
 
     #Enviando jogada realizada
     return_jogada=exibir()
