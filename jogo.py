@@ -57,7 +57,7 @@ def vitoria(vetor):
     
 #INICIO DO JOGO
 jogo_da_velha=[['-','-','-'],['-','-','-'],['-','-','-']]
-'''
+
 exibir()
 
 while True:
@@ -92,11 +92,11 @@ while True:
         result=jogada(jogo_da_velha,jogada_linha,jogada_coluna,'x')
     
     #==================================== VITORIA ====================================
-    win=vitoria(jogo_da_velha)
+    '''win=vitoria(jogo_da_velha)
     if win==True:
         exibir()
         print('JOGADOR 1 VENCEU')
-        break
+        break'''
     #==================================== EMPATE ====================================
     draw=empate(jogo_da_velha)
     if draw==True:
@@ -138,11 +138,11 @@ while True:
             jogada_coluna=int(input('Informe outra Coluna: '))
         result=jogada(jogo_da_velha,jogada_linha,jogada_coluna,'o')
     #==================================== VITORIA ====================================
-    win=vitoria(jogo_da_velha)
+    '''win=vitoria(jogo_da_velha)
     if win==True:
         exibir()
         print('JOGADOR 2 VENCEU')
-        break
+        break'''
     #==================================== EMPATE ====================================
     draw=empate(jogo_da_velha)
     if draw==True:
@@ -151,4 +151,3 @@ while True:
         break
     exibir()
     print()
-'''

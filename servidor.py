@@ -84,18 +84,35 @@ udp.sendto(sua_vez.encode(),jogadores[1])
 
 numero_de_jogadas=0
 while True:
-    # JOGADOR 1
+    ############################################# JOGADOR 1 #############################################
+    
     #Enviando permissão para o jogador realizar sua jogada
     sua_vez='True'
     udp.sendto(sua_vez.encode(),jogadores[0])
-    #Enviando sua jogada para ele e seu oponente
+    
+    #Exibindo jogadas realizada
     if numero_de_jogadas==0:
         primeira_jogada='primeira jogada'
         udp.sendto(primeira_jogada.encode(),jogadores[0])
     else:
         return_jogo=exibir()
         udp.sendto(return_jogo.encode(),jogadores[0])
-    
+
+    #Eviando mensagem de derrota
+    lose=vitoria(jogo_da_velha)
+    if lose==True:
+        msg_de_derrota='lose'
+    else:
+        msg_de_derrota='-'
+    udp.sendto(msg_de_derrota.encode(),jogadores[0])
+
+    #Enviando condição de empate
+    draw=empate(jogo_da_velha)
+    if draw==True:
+        msg_de_empate='draw'
+    else:
+        msg_de_empate='-'
+    udp.sendto(msg_de_empate.encode(),jogadores[0])
 
     #Recebendo jogada do 1º jogador
     msg, jogador = udp.recvfrom(1024)  
@@ -106,36 +123,76 @@ while True:
     print('Recebi de ',jogador, msg) 
     return_jogada=exibir()
     
-    
-
     #Enviando jogada realizada
     udp.sendto(return_jogada.encode(),jogadores[0])
-    
 
-    
-    
+    #Enviando condição de vitoria
+    win=vitoria(jogo_da_velha)
+    if win == True:
+        msg_de_vitoria='win'
+    else:
+        msg_de_vitoria='lose'
+    udp.sendto(msg_de_vitoria.encode(),jogadores[0])
+
+    #Testando condição de empate
+    draw=empate(jogo_da_velha)
+    if draw==True:
+        msg_de_empate='draw'
+    else:
+        msg_de_empate='-'
+    udp.sendto(msg_de_empate.encode(),jogadores[0])
 
     numero_de_jogadas+=1
-
-    # JOGADOR 2
+    ############################################# JOGADOR 2 #############################################
+    
     #Enviando permissão para o jogador realizar sua jogada
     sua_vez='True'
     udp.sendto(sua_vez.encode(),jogadores[1])
-    #Enviando sua jogada para ele e seu oponente
     
+    #Exibindo jogadas realizadas
     return_jogo=exibir()
     udp.sendto(return_jogo.encode(),jogadores[1])
     
+    #Eviando mensagem de derrota
+    lose=vitoria(jogo_da_velha)
+    if lose==True:
+        msg_de_derrota='lose'
+    else:
+        msg_de_derrota='-'
+    udp.sendto(msg_de_derrota.encode(),jogadores[1])
+
+    #Enviando condição de empate
+    draw=empate(jogo_da_velha)
+    if draw==True:
+        msg_de_empate='draw'
+    else:
+        msg_de_empate='-'
+    udp.sendto(msg_de_empate.encode(),jogadores[1])
+
     #Recebendo jogada do 2º jogador
     msg, jogador = udp.recvfrom(1024)  
     msg=msg.decode()
     jogada(jogo_da_velha,int(msg[0]),int(msg[1]),'o')
     print('Recebi de ',jogador, msg) 
-    
+
     #Enviando jogada realizada
     return_jogada=exibir()
-    
     udp.sendto(return_jogada.encode(),jogadores[1])
-    
-    
+
+    #Enviando msg de vitoria
+    win=vitoria(jogo_da_velha)
+    if win == True:
+        msg_de_vitoria='win'
+    else:
+        msg_de_vitoria='lose'
+    udp.sendto(msg_de_vitoria.encode(),jogadores[1])
+
+    #Enviando condição de empate
+    draw=empate(jogo_da_velha)
+    if draw==True:
+        msg_de_empate='draw'
+    else:
+        msg_de_empate='-'
+    udp.sendto(msg_de_empate.encode(),jogadores[1])
+
 udp.close()

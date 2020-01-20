@@ -28,13 +28,25 @@ while True:
         minha_vez,servidor=udp.recvfrom(1024)
     
     #Jogada do oponente
-    
     jogada_do_oponente,servidor=udp.recvfrom(1024)
     if jogada_do_oponente.decode()=='primeira jogada':
         print('')
     else:
         print('Seu oponente jogou:')
         print(jogada_do_oponente.decode())
+
+    #Oponente venceu
+    msg_derrota,servidor=udp.recvfrom(1024)
+    if msg_derrota.decode()=='lose':
+        print('Seu oponente venceu a partida! ')
+        break
+
+    #O jogo empatou
+    msg_empate,servidor=udp.recvfrom(1024)
+    if msg_empate.decode()=='draw':
+        print('O jogo terminou em EMPATE!')
+        break
+
     #Aramazenando minha jogada
     msg=''
     print('Sua vez!')
@@ -50,17 +62,28 @@ while True:
         break
     while coluna<'0' or coluna>'2':
         coluna=input('Coluna Invalida! Digite outra coluna: ')
-    
     msg+=coluna
+    
     #Enviado jogada
     udp.sendto(msg.encode(), dest)
 
-    
     #Vizualizando a minha jogada
     print('Você jogou:')
     minha_jogada,servidor=udp.recvfrom(1024)
     print(minha_jogada.decode())
 
+    #Testando condição de vitoria
+    msg_vitoria,servidor=udp.recvfrom(1024)
+    if msg_vitoria.decode()=='win':
+        print('Você Venceu!')
+        break
+    
+    #Testando condição de empate
+    msg_empate,servidor=udp.recvfrom(1024)
+    if msg_empate.decode()=='draw':
+        print('Jogo terminou em EMPATE!')
+        break
+    
     print('Agora é a vez do seu oponente!')
     print()
     
